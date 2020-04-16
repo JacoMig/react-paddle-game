@@ -8,7 +8,9 @@ import {DEFAULT_BALLS, GAME_WIDTH, BALLS_COLORS} from './constants'
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      lives: 5
+    };
     this.World = Matter.World;
     this.Render = Matter.Render;
     this.Engine = Matter.Engine,
@@ -94,23 +96,30 @@ class App extends React.Component {
     this.World.add(this.engine.world, [element]);
   }
 
-  removeBall(BODY){
+  removeBody(BODY){
     this.World.remove(this.engine.world, BODY)
+    console.log(BODY)
   }
 
-  playerLivesOff(){
-    this.setState({lives: this.state.lives - 1})
-    
+  ballFalls(ball){
+    if(this.state.lives > 0){
+      this.setState({lives: this.state.lives-1})
+    }else{
+      this.removeBody(ball)
+    }
   }
+  
 
   render() {
     return  (<div ref="worldEl">
+                <p>{this.state.lives}</p>
                 <Scene 
                   addBody={this.addBody.bind(this)} 
                   engine={this.engine}
                   keys={this.keyListener}
-                  removeBall={this.removeBall.bind(this)}
-                  playerLivesOff={this.playerLivesOff.bind(this)}
+                  removeBody={this.removeBody.bind(this)}
+                  ballFalls={this.ballFalls.bind(this)}
+                  lives={this.state.lives}
                 />
             </div>)
   }
