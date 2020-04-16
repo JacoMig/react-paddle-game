@@ -1,5 +1,5 @@
 {
-  "name": "react-starter",
+  "name": "react-paddle-game",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -26,8 +26,12 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "file-loader": "^6.0.0",
     "node-sass": "^4.13.1",
+    "prop-types": "^15.7.2",
+    "react-game-kit": "^1.0.6",
+    "react-hot-loader": "^4.12.20",
     "sass-loader": "^8.0.2",
     "svg-url-loader": "^5.0.0"
   }
