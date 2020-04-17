@@ -10,7 +10,7 @@ const shouldMoveRight = (body) => {
     return body.position.x < GAME_WIDTH;
 }
 
-const paddleY = GAME_HEIGHT
+const paddleY = GAME_HEIGHT - 20
 
 const paddleOptions = {
     isStatic: true,
@@ -21,29 +21,35 @@ const paddleOptions = {
     }
 }
 
+let keydown = false
 
 const Paddle = (props) => {
     const {keys} = props
     const paddle = Matter.Bodies.rectangle(200, paddleY, 150, 20, paddleOptions)
     let step = paddle.position.x
-
+    let acc = 0.2
     const update = () => {
         if (keys.isDown(keys.LEFT)) {
             console.log('LEFT')
             if(shouldMoveLeft(paddle)){
-               // keydown = true
-                step-=5
+                keydown = true
+                acc+=0.5 
+                step-=acc
                 Matter.Body.set(paddle, 'position', { x: step, y: paddleY});
             }
         }
         else if (keys.isDown(keys.RIGHT)) {
             console.log('RIGHT')
             if(shouldMoveRight(paddle)){
-               // keydown = true
-                step+=5
+                keydown = true
+                acc+=0.5 
+                step+=acc
                 Matter.Body.set(paddle, 'position', { x: step, y: paddleY});
             }
+        }else {
+            acc = 0.2
         }
+        
     }
 
     const handleCollision = (pairs) => {
@@ -52,7 +58,7 @@ const Paddle = (props) => {
             const velX = pairs.bodyA.position.x - middle
             Matter.Body.setVelocity(pairs.bodyA, {x: (velX/5), y: -25}) 
         }
-       // console.log(pairs)
+      //  console.log(pairs)
     }
 
     

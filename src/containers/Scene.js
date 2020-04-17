@@ -1,42 +1,51 @@
 import React, {useState, useEffect} from 'react'
 import Matter from 'matter-js'
-import {GAME_WIDTH} from '../constants'
+// import {GAME_WIDTH} from '../constants'
 import Paddle from '../components/Paddle'
-import '../sass/global.scss'
+import Bricks from '../components/Bricks'
+import { GAME_WIDTH } from '../constants'
+import {getRandom} from '../utils'
 
 const ballOptions = {
     density: 0.04,
-    frictionAir: 0.02,
+    frictionAir: 0.01,
     restitution: 0.5,
     friction: 0.1,
-    label: "ballME",
+    label: "ball",
     render: {
         fillStyle: 'white'
     }
     // inertia : Infinity
 }
 
-let keydown = false;
-let acc = 0.3;
+
 
 const Scene = (props) => {
-    const {keys} = props
-    let ballA = Matter.Bodies.circle(210, 200, 10, ballOptions)
+    let ballA = Matter.Bodies.circle(getRandom(50, GAME_WIDTH-50), 200, 10, ballOptions)
    
-    const checkIfBallIsIn = () => {
-        return props.engine.world.bodies.some(b => b.label === "ballME")
+    const gameOver = () => {
+        return props.engine.world.bodies.some(b => b.label === "ball")
     } 
 
+    const reLoadBall = () => {
+        setTimeout(() => {
+            Matter.Body.set(ballA, 'isStatic', false)
+            Matter.Body.setVelocity(ballA, {x: getRandom(-8, 8), y: 0})
+        }, 500)
+    }
+
     const update = () => {
-       if(ballA.position.y > window.innerHeight && checkIfBallIsIn()){
+        if(ballA.position.y > window.innerHeight && gameOver()){
+            reLoadBall()
             props.ballFalls(ballA)
-            Matter.Body.setVelocity(ballA, {x: 0, y: 0})
-            Matter.Body.set(ballA, 'position', {x: 100, y: 200})
+            const randomX = getRandom(50, GAME_WIDTH-50)
+            Matter.Body.set(ballA, 'position', {x: randomX, y: 200})
+            Matter.Body.set(ballA, 'isStatic', true)
         }
     } 
 
     const ballCollision = (pairs) => {
-        if(pairs.bodyB.label === "ball"){
+        if(pairs.bodyB.label === "brick"){
             props.removeBody(pairs.bodyB)
         }
     }
@@ -52,8 +61,8 @@ const Scene = (props) => {
     }, [])
     
     return (
-        <>
-            
+        <>  
+            <Bricks addBody={props.addBody} />
             <Paddle 
                 addBody={props.addBody}
                 engine={props.engine}
