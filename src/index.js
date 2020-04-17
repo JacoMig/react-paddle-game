@@ -4,6 +4,7 @@ import Matter from "matter-js";
 import Scene from './containers/Scene'
 import {KeyListener} from 'react-game-kit'
 import {DEFAULT_BALLS, GAME_WIDTH, BALLS_COLORS} from './constants'
+import './sass/global.scss'
 
 class App extends React.Component {
   constructor(props) {
@@ -112,7 +113,7 @@ class App extends React.Component {
 
   render() {
     return  (<div ref="worldEl">
-                <p>{this.state.lives}</p>
+                <p className="score">{this.state.lives}</p>
                 <Scene 
                   addBody={this.addBody.bind(this)} 
                   engine={this.engine}
